@@ -1,11 +1,5 @@
 const { Pilot } = require('../models/pilot')
 
-const create = async (req, res) => {
-  const newPilot = await Pilot.create(req.body)
-
-  res.json(newPilot)
-}
-
 const getAll = async (req, res) => {
   const pilots = await Pilot.find()
 
@@ -16,6 +10,12 @@ const getById = async (req, res) => {
   const pilot = await Pilot.findById(req.params.genreId)
 
   res.json(pilot)
+}
+
+const create = async (req, res) => {
+  const newPilot = await Pilot.create(req.body)
+
+  res.json(newPilot)
 }
 
 const update = async (req, res) => {
@@ -33,9 +33,9 @@ const remove = async (req, res) => {
 }
 
 module.exports = {
-  create,
   getAll,
   getById,
+  create,
   update,
   remove,
 }

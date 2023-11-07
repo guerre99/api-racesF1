@@ -14,4 +14,16 @@ const pilotSchema = new mongoose.Schema({
 
 const Pilot = mongoose.model('Pilot', pilotSchema)
 
+const raceValidation = [
+  body('name').notEmpty().isString().exists(),
+  body('image').isString(),
+  body('nationality').notEmpty().exists(),
+  body('wins').notEmpty().isInt().exists(),
+  body('championships').isInt(),
+  body('podiums').isInt(),
+  body('debut_date').notEmpty().isISO8601('yyyy-mm-dd').exists(),
+  body('retirement_date').isISO8601('yyyy-mm-dd'),
+]
+
 exports.Pilot = Pilot
+exports.raceValidation = raceValidation
