@@ -1,13 +1,22 @@
 const { Pilot } = require('../models/pilot')
 
 const getAll = async (req, res) => {
-  const pilots = await Pilot.find()
+  const { search, order } = req.query
+
+  const query = {}
+  let sort = {}
+
+  if (search) query.name = { $regex: new RegExp(search, 'i') }
+
+  if (order) sort[order] = 1
+
+  const pilots = await Pilot.find(query).sort(sort)
 
   res.json(pilots)
 }
 
 const getById = async (req, res) => {
-  const pilot = await Pilot.findById(req.params.genreId)
+  const pilot = await Pilot.findById(req.params.pilotId)
 
   res.json(pilot)
 }
@@ -19,7 +28,7 @@ const create = async (req, res) => {
 }
 
 const update = async (req, res) => {
-  const pilot = await Pilot.findByIdAndUpdate(req.params.genreId, req.body, {
+  const pilot = await Pilot.findByIdAndUpdate(req.params.pilotId, req.body, {
     new: true,
   })
 
@@ -27,7 +36,7 @@ const update = async (req, res) => {
 }
 
 const remove = async (req, res) => {
-  const pilot = await Pilot.findByIdAndDelete(req.params.genreId)
+  const pilot = await Pilot.findByIdAndDelete(req.params.pilotId)
 
   res.json(pilot)
 }

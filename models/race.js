@@ -8,16 +8,15 @@ const raceSchema = new mongoose.Schema({
   description: { type: String },
   date: { type: Date, required: true },
   podium: {
-    first_position: { type: mongoose.ObjectId, ref: 'Pilot' },
-    second_position: { type: mongoose.ObjectId, ref: 'Pilot' },
-    third_position: { type: mongoose.ObjectId, ref: 'Pilot' },
-    required: true,
+    first_position: { type: mongoose.Schema.Types.ObjectId, ref: 'Pilot' },
+    second_position: { type: mongoose.Schema.Types.ObjectId, ref: 'Pilot' },
+    third_position: { type: mongoose.Schema.Types.ObjectId, ref: 'Pilot' },
   },
   resume: { type: String },
 })
 const Race = mongoose.model('Race', raceSchema)
 
-// Investica como crear un validador que comprueba que los 3 pilotos son diferentes
+// Investiga como crear un validador que comprueba que los 3 pilotos son diferentes
 // BONUS: Trata con express validator de también verificar que las id pasadas corresponden con ids que tienen pilotos existentes en la db
 const raceValidation = [
   body('name').notEmpty().isString().exists(),
@@ -25,12 +24,41 @@ const raceValidation = [
   body('image').isString(),
   body('description').isString(),
   body('date').notEmpty().isISO8601('yyyy-mm-dd').exists(),
-  body('podium').notEmpty().isObject().exists(),
   body('podium.first_position').notEmpty().exists(),
   body('podium.second_position').notEmpty().exists(),
   body('podium.third_position').notEmpty().exists(),
+  body('podium')
+    .notEmpty()
+    .isObject()
+    .exists()
+    .custom(async (podiumData) => {
+      const { first_position, second_position, third_position } = podiumData
+      if (
+        second_position === first_position ||
+        third_position === first_position ||
+        third_position === second_position
+      )
+        throw new Error("Can't use the same pilot for two or more positions")
+    }),
   body('resume').isString(),
 ]
 
 exports.Race = Race
 exports.raceValidation = raceValidation
+/*.custom(async (podiumResult, { req }) => {
+      const [{ first_position }, { second_position }, { third_position }] =
+        podiumResult
+      console.log(podiumResult)
+      if (first_position || second_position || third_position) {
+        const race = await Race.findOne({ _id: req.params.raceId })
+        const podio = race.podium
+        if (
+          second_position === podio.first_position ||
+          second_position === podio.third_position ||
+          third_position === podio.first_position ||
+          third_position === podio.second_position
+        )
+          throw new Error('Pilot already in podium')
+      }
+      throw new Error('Podium positions are required')
+    })*/

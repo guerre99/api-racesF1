@@ -8,8 +8,8 @@ module.exports = function (app) {
 
   // app.use('/api/users', require('./routes/users'))
 
-  //   app.use('/api/pilots', require('./routes/pilots'))
-  //   app.use('/api/races', require('./routes/races'))
+  app.use('/api/pilots', require('../routes/pilots'))
+  app.use('/api/races', require('../routes/races'))
 
   app.get('/ping', (req, res) => {
     res.send({ success: true })
