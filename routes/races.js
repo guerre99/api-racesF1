@@ -3,26 +3,25 @@ const raceController = require('../controllers/races')
 const mongoIdFromParamValidation = require('../middlewares/mongoIdFromParams')
 const validate = require('../middlewares/validate')
 
-// const auth = require('../middlewares/auth')
-// const admin = require('../middlewares/admin')
+const auth = require('../middlewares/auth')
+const admin = require('../middlewares/admin')
 
 const { Router } = require('express')
 
 const router = Router()
 
-router.get('/', /*auth,*/ raceController.getAll)
+router.get('/', raceController.getAll)
 router.get(
   '/:raceId',
-  /*auth,*/
   mongoIdFromParamValidation('raceId'),
   validate,
   raceController.getById
 )
-router.post('/', raceValidation, validate, raceController.create)
+router.post('/', auth, admin, raceValidation, validate, raceController.create)
 router.put(
   '/:raceId',
-  //   auth,
-  //   admin,
+  auth,
+  admin,
   mongoIdFromParamValidation('raceId'),
   raceValidation,
   validate,
@@ -30,8 +29,8 @@ router.put(
 )
 router.delete(
   '/:raceId',
-  //   auth,
-  //   admin,
+  auth,
+  admin,
   mongoIdFromParamValidation('raceId'),
   validate,
   raceController.remove

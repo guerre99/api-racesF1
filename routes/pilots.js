@@ -3,8 +3,8 @@ const pilotController = require('../controllers/pilots')
 const mongoIdFromParamValidation = require('../middlewares/mongoIdFromParams')
 const validate = require('../middlewares/validate')
 
-// const auth = require('../middlewares/auth')
-// const admin = require('../middlewares/admin')
+const auth = require('../middlewares/auth')
+const admin = require('../middlewares/admin')
 
 const { Router } = require('express')
 
@@ -14,13 +14,14 @@ const { query } = require('express-validator')
 
 router.get(
   '/',
+  auth,
   query('search').isIn(['name']).optional(),
   query('order').isIn(['name', 'wins', 'debut_date']).optional(),
-  /*auth,*/ pilotController.getAll
+  pilotController.getAll
 )
 router.get(
   '/:pilotId',
-  /*auth,*/
+  auth,
   pilotValidation,
   validate,
   pilotController.getById
@@ -28,8 +29,8 @@ router.get(
 router.post('/', pilotValidation, validate, pilotController.create)
 router.put(
   '/:pilotId',
-  //   auth,
-  //   admin,
+  auth,
+  admin,
   mongoIdFromParamValidation('pilotId'),
   pilotValidation,
   validate,
@@ -37,8 +38,8 @@ router.put(
 )
 router.delete(
   '/:pilotId',
-  //   auth,
-  //   admin,
+  auth,
+  admin,
   mongoIdFromParamValidation('pilotId'),
   validate,
   pilotController.remove

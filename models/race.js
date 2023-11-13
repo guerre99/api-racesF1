@@ -45,20 +45,3 @@ const raceValidation = [
 
 exports.Race = Race
 exports.raceValidation = raceValidation
-/*.custom(async (podiumResult, { req }) => {
-      const [{ first_position }, { second_position }, { third_position }] =
-        podiumResult
-      console.log(podiumResult)
-      if (first_position || second_position || third_position) {
-        const race = await Race.findOne({ _id: req.params.raceId })
-        const podio = race.podium
-        if (
-          second_position === podio.first_position ||
-          second_position === podio.third_position ||
-          third_position === podio.first_position ||
-          third_position === podio.second_position
-        )
-          throw new Error('Pilot already in podium')
-      }
-      throw new Error('Podium positions are required')
-    })*/
